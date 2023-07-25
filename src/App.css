@@ -19,7 +19,7 @@
 
 #panel{
   width: 250px;
-  height: 504px;
+  height: fit-content;
   border: 2px solid black;
   position: absolute;
   top: 50%;
@@ -29,4 +29,8 @@
 
 #parameters span{
   display: block;
+}
+
+li input{
+  width: 100px;
 }

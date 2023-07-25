@@ -15,7 +15,7 @@ const Square = ({
 }: Props) => {
   return (
     <div className="square" onClick={() => onHandleSquareId(squareId)}>
-      {squareId}
+      {squareId + 1}
     </div>
   );
 };

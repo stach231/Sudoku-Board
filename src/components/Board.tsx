@@ -24,11 +24,7 @@ const Board = () => {
         const newData: number[][] = prevData.map((item, index) => {
           return index === id
             ? item.map((item2, index2) => {
-                return index2 === num
-                  ? event.target.value === ""
-                    ? 0
-                    : parseInt(event.target.value)
-                  : item2;
+                return index2 === num ? parseInt(event.target.value) : item2;
               })
             : item;
         });
@@ -38,6 +34,17 @@ const Board = () => {
       console.log(data);
       console.log(event.target);
     };
+
+  const clearInputs = (squareId: number) => {
+    console.log("Clear");
+    setData((prevData) => {
+      const newData: number[][] = prevData.map((item, index) => {
+        return squareId === index ? [0, 0, 0, 0, 0, 0, 0, 0, 0] : item;
+      });
+      dataRef.current = newData;
+      return newData;
+    });
+  };
 
   useEffect(() => {
     console.log(id);
@@ -115,96 +122,111 @@ const Board = () => {
           <div>
             <ul className="list-group">
               <li className="list-group-item">
-                1: {dataRef.current[id][0] !== 1 ? "1 /" : ""}{" "}
+                x<sub>1</sub> :{" "}
+                {dataRef.current[id][0] !== 1 && dataRef.current[id][0] !== 0
+                  ? "1 /"
+                  : ""}{" "}
                 <input
                   type="number"
-                  value={
-                    dataRef.current[id][0] !== 0 ? dataRef.current[id][0] : ""
-                  }
+                  value={dataRef.current[id][0]}
                   onChange={handleChange(id, 0)}
                 ></input>
               </li>
               <li className="list-group-item">
-                2: {dataRef.current[id][1] !== 1 ? "1 /" : ""}{" "}
+                x<sub>2</sub> :
+                {dataRef.current[id][1] !== 1 && dataRef.current[id][1] !== 0
+                  ? "1 /"
+                  : ""}{" "}
                 <input
                   type="number"
-                  value={
-                    dataRef.current[id][1] !== 0 ? dataRef.current[id][1] : ""
-                  }
+                  value={dataRef.current[id][1]}
                   onChange={handleChange(id, 1)}
                 ></input>
               </li>
               <li className="list-group-item">
-                3: {dataRef.current[id][2] !== 1 ? "1 /" : ""}{" "}
+                x<sub>3</sub> :{" "}
+                {dataRef.current[id][2] !== 1 && dataRef.current[id][2] !== 0
+                  ? "1 /"
+                  : ""}{" "}
                 <input
                   type="number"
-                  value={
-                    dataRef.current[id][2] !== 0 ? dataRef.current[id][2] : ""
-                  }
+                  value={dataRef.current[id][2]}
                   onChange={handleChange(id, 2)}
                 ></input>
               </li>
               <li className="list-group-item">
-                4: {dataRef.current[id][3] !== 1 ? "1 /" : ""}{" "}
+                x<sub>4</sub> :{" "}
+                {dataRef.current[id][3] !== 1 && dataRef.current[id][3] !== 0
+                  ? "1 /"
+                  : ""}{" "}
                 <input
                   type="number"
-                  value={
-                    dataRef.current[id][3] !== 0 ? dataRef.current[id][3] : ""
-                  }
+                  value={dataRef.current[id][3]}
                   onChange={handleChange(id, 3)}
                 ></input>
               </li>
               <li className="list-group-item">
-                5: {dataRef.current[id][4] !== 1 ? "1 /" : ""}{" "}
+                x<sub>5</sub> :{" "}
+                {dataRef.current[id][4] !== 1 && dataRef.current[id][4] !== 0
+                  ? "1 /"
+                  : ""}{" "}
                 <input
                   type="number"
-                  value={
-                    dataRef.current[id][4] !== 0 ? dataRef.current[id][4] : ""
-                  }
+                  value={dataRef.current[id][4]}
                   onChange={handleChange(id, 4)}
                 ></input>
               </li>
               <li className="list-group-item">
-                6: {dataRef.current[id][5] !== 1 ? "1 /" : ""}{" "}
+                x<sub>6</sub> :{" "}
+                {dataRef.current[id][5] !== 1 && dataRef.current[id][5] !== 0
+                  ? "1 /"
+                  : ""}{" "}
                 <input
                   type="number"
-                  value={
-                    dataRef.current[id][5] !== 0 ? dataRef.current[id][5] : ""
-                  }
+                  value={dataRef.current[id][5]}
                   onChange={handleChange(id, 5)}
                 ></input>
               </li>
               <li className="list-group-item">
-                7: {dataRef.current[id][6] !== 1 ? "1 /" : ""}{" "}
+                x<sub>7</sub> :{" "}
+                {dataRef.current[id][6] !== 1 && dataRef.current[id][6] !== 0
+                  ? "1 /"
+                  : ""}{" "}
                 <input
                   type="number"
-                  value={
-                    dataRef.current[id][6] !== 0 ? dataRef.current[id][6] : ""
-                  }
+                  value={dataRef.current[id][6]}
                   onChange={handleChange(id, 6)}
                 ></input>
               </li>
               <li className="list-group-item">
-                8: {dataRef.current[id][7] !== 1 ? "1 /" : ""}{" "}
+                x<sub>8</sub> :{" "}
+                {dataRef.current[id][7] !== 1 && dataRef.current[id][7] !== 0
+                  ? "1 /"
+                  : ""}{" "}
                 <input
                   type="number"
-                  value={
-                    dataRef.current[id][7] !== 0 ? dataRef.current[id][7] : ""
-                  }
+                  value={dataRef.current[id][7]}
                   onChange={handleChange(id, 7)}
                 ></input>
               </li>
               <li className="list-group-item">
-                9: {dataRef.current[id][8] !== 1 ? "1 /" : ""}{" "}
+                x<sub>9</sub> :{" "}
+                {dataRef.current[id][8] !== 1 && dataRef.current[id][8] !== 0
+                  ? "1 /"
+                  : ""}{" "}
                 <input
                   type="number"
-                  value={
-                    dataRef.current[id][8] !== 0 ? dataRef.current[id][8] : ""
-                  }
+                  value={dataRef.current[id][8]}
                   onChange={handleChange(id, 8)}
                 ></input>
               </li>
             </ul>
+            <button
+              style={{ marginTop: "5px", marginBottom: "5px" }}
+              onClick={() => clearInputs(id)}
+            >
+              Wyczyść dane
+            </button>
           </div>
         </div>
       ) : null}
