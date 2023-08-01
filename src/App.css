@@ -10,6 +10,56 @@
   height: 50px;
   border: 2px solid black;
   float:left;
+  font-size: 30px;
+  position: relative;
+}
+
+.border1 {
+  position: absolute;
+  top: calc(-25% + 105%*var(--y));
+  left: calc(-25% + 105%*var(--x));
+  width: 20px;
+  height: 20px;
+  border-left: calc( 4px * (1 - var(--x))) solid #222222;
+  border-top: calc( 4px * (1 - var(--y))) solid #222222;
+  border-bottom: calc( 4px * var(--y)) solid #222222;
+  border-right: calc( 4px * var(--x)) solid #222222;
+  border-top-left-radius: calc(5px * (1 - (var(--x)))*(1 - var(--y)));
+  border-top-right-radius: calc(5px * var(--x)*(1 - var(--y)));
+  border-bottom-left-radius: calc(5px * (1 - var(--x))*var(--y));
+  border-bottom-right-radius: calc(5px * var(--x)*var(--y));
+  animation: side-change 1s ease-in-out infinite;  
+  z-index: 1;
+}
+
+@keyframes side-change {
+  0% {
+      transform: translate(0%, 0%);
+  }
+  50% {
+      transform: translate(calc(25% - ((1 - var(--x))*50%)),calc(25% - ((1 - var(--y))*50%)));
+  }
+  100% {
+      transform: translate(0%, 0%);
+  }
+}
+
+.colored2{
+  background-color: rgb(184, 184, 255);
+  width: 50px;
+  height: 50px;
+  border: 2px solid black;
+  float:left;
+  font-size: 30px;
+}
+
+.colored3{
+  background-color: rgb(93, 93, 255);
+  width: 50px;
+  height: 50px;
+  border: 2px solid black;
+  float:left;
+  font-size: 30px;
 }
 
 .macrosquare{
@@ -24,7 +74,7 @@
   position: absolute;
   top: 50%;
   left: 80%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%,-50%);
 }
 
 #parameters span{
@@ -33,4 +83,48 @@
 
 li input{
   width: 100px;
+}
+
+#arrow1{
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: calc(sin(1.5707963*(var(--i) - 1))*120%);
+  top: calc(-1*sin(1.5707963*var(--i))*120%);
+  /*animation: point 1s infinite ease-in-out;*/
+  transform: rotateZ(calc(var(--i)*90deg));
+}
+
+#arrow2{
+  position: absolute;
+  width: 33.3px;
+  height: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+}
+
+#arrow3{
+  position: absolute;
+  width: 16.7px;
+  height: 16.7px;
+  left: 50%;
+  top: 50%;
+  border-top: 4px solid black;
+  border-right: 4px solid black;
+  transform: translate(-20%,-50%) rotateZ(45deg);
+}
+
+@keyframes point{
+  0%{
+      transform: translate(0px,0px) rotateZ(calc(var(--i)*90deg));
+  }
+  50%{
+      transform: translate(calc(sin(1.5707963*(var(--i) - 1))*25px),calc(-1*sin(1.5707963*var(--i))*25px)) rotateZ(calc(var(--i)*90deg));
+  }
+  100%{
+      transform: translate(0px,0px) rotateZ(calc(var(--i)*90deg));
+  }
 }
