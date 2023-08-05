@@ -17,6 +17,7 @@ interface Props {
     columnNum: boolean[][];
     macroNum: boolean[][];
   };
+  probabilities: number[][];
 }
 
 // {((macroSquareId/3)*27)+(macroSquareId%3)*3}
@@ -29,6 +30,7 @@ const MacroSquare = ({
   onChangeValues,
   values,
   tables,
+  probabilities,
 }: Props) => {
   return (
     <div className="macrosquare">
@@ -46,6 +48,7 @@ const MacroSquare = ({
           onChangeValues={onChangeValues}
           values={values}
           tables={tables}
+          probabilities={probabilities}
         ></Square>
         <Square
           id={id}
@@ -61,6 +64,7 @@ const MacroSquare = ({
           onChangeValues={onChangeValues}
           values={values}
           tables={tables}
+          probabilities={probabilities}
         ></Square>
         <Square
           id={id}
@@ -76,6 +80,7 @@ const MacroSquare = ({
           onChangeValues={onChangeValues}
           values={values}
           tables={tables}
+          probabilities={probabilities}
         ></Square>
       </div>
       <div>
@@ -93,6 +98,7 @@ const MacroSquare = ({
           onChangeValues={onChangeValues}
           values={values}
           tables={tables}
+          probabilities={probabilities}
         ></Square>
         <Square
           id={id}
@@ -108,6 +114,7 @@ const MacroSquare = ({
           onChangeValues={onChangeValues}
           values={values}
           tables={tables}
+          probabilities={probabilities}
         ></Square>
         <Square
           id={id}
@@ -123,6 +130,7 @@ const MacroSquare = ({
           onChangeValues={onChangeValues}
           values={values}
           tables={tables}
+          probabilities={probabilities}
         ></Square>
       </div>
       <div>
@@ -140,6 +148,7 @@ const MacroSquare = ({
           onChangeValues={onChangeValues}
           values={values}
           tables={tables}
+          probabilities={probabilities}
         ></Square>
         <Square
           id={id}
@@ -155,6 +164,7 @@ const MacroSquare = ({
           onChangeValues={onChangeValues}
           values={values}
           tables={tables}
+          probabilities={probabilities}
         ></Square>
         <Square
           id={id}
@@ -170,6 +180,7 @@ const MacroSquare = ({
           onChangeValues={onChangeValues}
           values={values}
           tables={tables}
+          probabilities={probabilities}
         ></Square>
       </div>
     </div>

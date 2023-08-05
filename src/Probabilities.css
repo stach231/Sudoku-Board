@@ -1,0 +1,89 @@
+.probabilities9{
+  background-color: rgb(255, 255, 255);
+  width: 50px;
+  height: 50px;
+  border: 2px solid black;
+  float:left;
+  position: relative;
+  font-size: 30px;
+}
+
+.probabilities8{
+    background-color: rgb(234, 234, 255);
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    float:left;
+    position: relative;
+    font-size: 30px;
+}
+
+.probabilities7{
+    background-color: rgb(210, 210, 255);
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    float:left;
+    position: relative;
+    font-size: 30px;
+}
+
+.probabilities6{
+    background-color: rgb(183, 183, 255);
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    float:left;
+    position: relative;
+    font-size: 30px;
+}
+
+.probabilities5{
+    background-color: rgb(153, 153, 255);
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    float:left;
+    position: relative;
+    font-size: 30px;
+}
+
+.probabilities4{
+    background-color: rgb(120, 120, 255);
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    float:left;
+    position: relative;
+    font-size: 30px;
+}
+
+.probabilities3{
+    background-color: rgb(84, 84, 255);
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    float:left;
+    position: relative;
+    font-size: 30px;
+}
+
+.probabilities2{
+    background-color: rgb(45, 45, 255);
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    float:left;
+    position: relative;
+    font-size: 30px;
+}
+
+.probabilities1{
+    background-color: rgb(3, 3, 255);
+    width: 50px;
+    height: 50px;
+    border: 2px solid black;
+    float:left;
+    position: relative;
+    font-size: 30px;
+}

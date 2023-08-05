@@ -51,6 +51,10 @@ const Board = () => {
     Array.from({ length: 9 }, () => [0, 0, 0, 0, 0, 0, 0, 0, 0])
   );
 
+  const [probabilities, setProbabilities] = useState<number[][]>(
+    Array.from({ length: 81 }, () => [9, 9, 9, 9, 9, 9, 9, 9, 9])
+  );
+
   const handleChange =
     (id: number, num: number) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,38 +106,248 @@ const Board = () => {
     });
   };
 
+  const calculateProbabilities = (idSquare: number) => {
+    const row: number[] = [];
+    [0, 1, 2, 3, 4, 5, 6, 7, 8].map((item) => {
+      squareNumbers[Math.floor(idSquare / 9)][idSquare % 9] !== item + 1 &&
+      rowNum[Math.floor(idSquare / 9)][item] &&
+      columnNum[idSquare % 9][item] &&
+      macroNum[(Math.floor(idSquare / 3) % 3) + 3 * Math.floor(idSquare / 27)][
+        item
+      ]
+        ? row.push(
+            Math.min(
+              [1, 2, 3, 4, 5, 6, 7, 8, 9].reduce((prev, item, index3) => {
+                return !rowNum[Math.floor(idSquare / 9)][index3] ||
+                  !columnNum[idSquare % 9][index3] ||
+                  !macroNum[
+                    3 * Math.floor(idSquare / 27) +
+                      Math.floor((idSquare % 9) / 3)
+                  ][index3]
+                  ? --prev
+                  : prev;
+              }, 9),
+              rowNum[Math.floor(idSquare / 9)].reduce((prev, item2, index3) => {
+                return squareNumbers[Math.floor(idSquare / 9)][index3] !== 0 ||
+                  !columnNum[index3][item] ||
+                  !macroNum[
+                    3 * Math.floor(idSquare / 27) + Math.floor(index3 / 3)
+                  ][item]
+                  ? --prev
+                  : prev;
+              }, 9),
+              columnNum[idSquare % 9].reduce((prev, item2, index3) => {
+                return squareNumbers[index3][idSquare % 9] !== 0 ||
+                  !rowNum[index3][item] ||
+                  !macroNum[
+                    3 * Math.floor(index3 / 3) + Math.floor((idSquare % 9) / 3)
+                  ][item]
+                  ? --prev
+                  : prev;
+              }, 9),
+              macroNum[
+                (Math.floor(idSquare / 3) % 3) + 3 * Math.floor(idSquare / 27)
+              ].reduce((prev, item2, index3) => {
+                return squareNumbers[
+                  3 * Math.floor(idSquare / 27) + Math.floor(index3 / 3)
+                ][3 * Math.floor((idSquare % 9) / 3) + (index3 % 3)] !== 0 ||
+                  !rowNum[
+                    3 * Math.floor(idSquare / 27) + Math.floor(index3 / 3)
+                  ][item] ||
+                  !columnNum[3 * Math.floor((idSquare % 9) / 3) + (index3 % 3)][
+                    item
+                  ]
+                  ? --prev
+                  : prev;
+              }, 9)
+            )
+          )
+        : row.push(10);
+    });
+    setProbabilities((prevProb) => {
+      const prob: number[][] = [];
+      prevProb.map((item, index) => {
+        index === idSquare ? prob.push(row) : prob.push(item);
+      });
+      return prob;
+    });
+  };
+
   useEffect(() => {
-    console.log(numbers.current);
-    console.log(id);
+    for (let i = 0; i < 81; i++) {
+      calculateProbabilities(i);
+    }
+    console.log(probabilities);
+  }, []);
+
+  useEffect(() => {
+    if (idRef.current !== -1) {
+      /*const idies: Set<number> = new Set<number>();
+      for (let i = 0; i < 9; i++) {
+        idies.add((idRef.current % 9) + 9 * i);
+        idies.add(Math.floor(idRef.current / 9) * 9 + i);
+        idies.add(
+          Math.floor(id / 27) * 27 +
+            Math.floor(i / 3) * 9 +
+            Math.floor((id % 9) / 3) * 3 +
+            (i % 3)
+        );
+      }
+      console.log(idies);
+      idies.forEach((item) => {
+        calculateProbabilities(item);
+      });
+
+      console.log(probabilities);*/
+      for (let i = 0; i < 81; i++) {
+        calculateProbabilities(i);
+      }
+    }
+  }, [squareNumbers]);
+
+  /*
+    {rowNum.map((item, index) =>
+                  squareNumbers[Math.floor(idRef.current / 9)][
+                    idRef.current % 9
+                  ] !==
+                    index + 1 &&
+                  rowNum[Math.floor(idRef.current / 9)][index] &&
+                  columnNum[idRef.current % 9][index] &&
+                  macroNum[
+                    (Math.floor(idRef.current / 3) % 3) +
+                      3 * Math.floor(idRef.current / 27)
+                  ][index] ? (
+                    <li className="list-group-item">
+                      {index + 1}: 1/
+                      {Math.min(
+                        [1, 2, 3, 4, 5, 6, 7, 8, 9].reduce(
+                          (prev, item, index3) => {
+                            return !rowNum[Math.floor(idRef.current / 9)][
+                              index3
+                            ] ||
+                              !columnNum[idRef.current % 9][index3] ||
+                              !macroNum[
+                                3 * Math.floor(idRef.current / 27) +
+                                  Math.floor((idRef.current % 9) / 3)
+                              ][index3]
+                              ? --prev
+                              : prev;
+                          },
+                          9
+                        ),
+                        rowNum[Math.floor(idRef.current / 9)].reduce(
+                          (prev, item2, index3) => {
+                            return squareNumbers[Math.floor(idRef.current / 9)][
+                              index3
+                            ] !== 0 ||
+                              !columnNum[index3][index] ||
+                              !macroNum[
+                                3 * Math.floor(idRef.current / 27) +
+                                  Math.floor(index3 / 3)
+                              ][index]
+                              ? --prev
+                              : prev;
+                          },
+                          9
+                        ),
+                        columnNum[idRef.current % 9].reduce(
+                          (prev, item2, index3) => {
+                            return squareNumbers[index3][idRef.current % 9] !==
+                              0 ||
+                              !rowNum[index3][index] ||
+                              !macroNum[
+                                3 * Math.floor(index3 / 3) +
+                                  Math.floor((idRef.current % 9) / 3)
+                              ][index]
+                              ? --prev
+                              : prev;
+                          },
+                          9
+                        ),
+                        macroNum[
+                          (Math.floor(idRef.current / 3) % 3) +
+                            3 * Math.floor(idRef.current / 27)
+                        ].reduce((prev, item2, index3) => {
+                          return squareNumbers[
+                            3 * Math.floor(idRef.current / 27) +
+                              Math.floor(index3 / 3)
+                          ][
+                            3 * Math.floor((idRef.current % 9) / 3) +
+                              (index3 % 3)
+                          ] !== 0 ||
+                            !rowNum[
+                              3 * Math.floor(idRef.current / 27) +
+                                Math.floor(index3 / 3)
+                            ][index] ||
+                            !columnNum[
+                              3 * Math.floor((idRef.current % 9) / 3) +
+                                (index3 % 3)
+                            ][index]
+                            ? --prev
+                            : prev;
+                        }, 9)
+                      )}
+                    </li>
+                  ) : (
+                    ""
+                  )
+                )}
+  */
+
+  useEffect(() => {
+    console.log(idRef.current);
+    console.log(
+      `${squareNumbers.map((item, index) => {
+        console.log(`SquareNum ${index}. ${item}`);
+      })}`
+    );
+    console.log(
+      `${rowNum.map((item, index) => {
+        console.log(`RowNum ${index}. ${item}`);
+      })}`
+    );
+    console.log(
+      `${columnNum.map((item, index) => {
+        console.log(`ColumnNum ${index}. ${item}`);
+      })}`
+    );
+    console.log(
+      `${macroNum.map((item, index) => {
+        console.log(`MacroNum ${index}. ${item}`);
+      })}`
+    );
   }, [id]);
 
   useEffect(() => {
     console.log("Zmiana row");
   }, [rowNumbers.current]);
 
+  const action = (event: KeyboardEvent) => {
+    if (event.code === "ArrowLeft" && idRef.current % 9 !== 0) {
+      setId((prevId) => prevId - 1);
+      idRef.current--;
+    } else if (event.code === "ArrowRight" && idRef.current % 9 !== 8) {
+      setId((prevId) => prevId + 1);
+      idRef.current++;
+    } else if (
+      event.code === "ArrowUp" &&
+      Math.floor(idRef.current / 9) !== 0
+    ) {
+      setId((prevId) => prevId - 9);
+      idRef.current -= 9;
+    } else if (
+      event.code === "ArrowDown" &&
+      Math.floor(idRef.current / 9) !== 8
+    ) {
+      setId((prevId) => prevId + 9);
+      idRef.current += 9;
+    }
+  };
+
   useEffect(() => {
-    window.addEventListener("keydown", (event: KeyboardEvent) => {
-      if (event.code === "ArrowLeft" && idRef.current % 9 !== 0) {
-        setId((prevId) => prevId - 1);
-        idRef.current--;
-      } else if (event.code === "ArrowRight" && idRef.current % 9 !== 8) {
-        setId((prevId) => prevId + 1);
-        idRef.current++;
-      } else if (
-        event.code === "ArrowUp" &&
-        Math.floor(idRef.current / 9) !== 0
-      ) {
-        setId((prevId) => prevId - 9);
-        idRef.current -= 9;
-      } else if (
-        event.code === "ArrowDown" &&
-        Math.floor(idRef.current / 9) !== 8
-      ) {
-        setId((prevId) => prevId + 9);
-        idRef.current += 9;
-      }
-    });
-  }, []);
+    if (id !== -1) window.addEventListener("keydown", action);
+    return () => window.removeEventListener("keydown", action);
+  }, [id]);
 
   return (
     <>
@@ -156,6 +370,7 @@ const Board = () => {
             tables={{ rowNum, columnNum, macroNum }}
             onChangeValues={handleValues}
             values={squareNumbers}
+            probabilities={probabilities}
           ></MacroSquare>
           <MacroSquare
             id={id}
@@ -165,6 +380,7 @@ const Board = () => {
             tables={{ rowNum, columnNum, macroNum }}
             onChangeValues={handleValues}
             values={squareNumbers}
+            probabilities={probabilities}
           ></MacroSquare>
           <MacroSquare
             id={id}
@@ -174,6 +390,7 @@ const Board = () => {
             tables={{ rowNum, columnNum, macroNum }}
             onChangeValues={handleValues}
             values={squareNumbers}
+            probabilities={probabilities}
           ></MacroSquare>
         </div>
         <div>
@@ -185,6 +402,7 @@ const Board = () => {
             tables={{ rowNum, columnNum, macroNum }}
             onChangeValues={handleValues}
             values={squareNumbers}
+            probabilities={probabilities}
           ></MacroSquare>
           <MacroSquare
             id={id}
@@ -194,6 +412,7 @@ const Board = () => {
             tables={{ rowNum, columnNum, macroNum }}
             onChangeValues={handleValues}
             values={squareNumbers}
+            probabilities={probabilities}
           ></MacroSquare>
           <MacroSquare
             id={id}
@@ -203,6 +422,7 @@ const Board = () => {
             tables={{ rowNum, columnNum, macroNum }}
             onChangeValues={handleValues}
             values={squareNumbers}
+            probabilities={probabilities}
           ></MacroSquare>
         </div>
         <div>
@@ -214,6 +434,7 @@ const Board = () => {
             tables={{ rowNum, columnNum, macroNum }}
             onChangeValues={handleValues}
             values={squareNumbers}
+            probabilities={probabilities}
           ></MacroSquare>
           <MacroSquare
             id={id}
@@ -223,6 +444,7 @@ const Board = () => {
             tables={{ rowNum, columnNum, macroNum }}
             onChangeValues={handleValues}
             values={squareNumbers}
+            probabilities={probabilities}
           ></MacroSquare>
           <MacroSquare
             id={id}
@@ -232,92 +454,157 @@ const Board = () => {
             tables={{ rowNum, columnNum, macroNum }}
             onChangeValues={handleValues}
             values={squareNumbers}
+            probabilities={probabilities}
           ></MacroSquare>
         </div>
       </div>
       {id !== -1 ? (
         <div id="panel">
-          <div
-            style={{
-              height: "40px",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <span
-              style={{
-                fontSize: "30px",
-                marginLeft: "20px",
-                position: "relative",
-                top: "50%",
-                transform: "translateY(-50%)",
-                height: "fit-content",
-              }}
-            >
-              {id + 1}
-            </span>
-            <button
-              className="btn-close"
-              onClick={() => setId(-1)}
-              style={{
-                position: "relative",
-                top: "50%",
-                transform: "translateY(-50%)",
-                justifyContent: "flex-end",
-                marginRight: "10px",
-              }}
-            ></button>
-          </div>
-          <div id="parameters">
-            <span>Row: {Math.floor(idRef.current / 9) + 1}</span>
-            <span>Column: {(idRef.current % 9) + 1}</span>
-            <span>
-              MacroSquare:{" "}
-              {(Math.floor(idRef.current / 3) % 3) +
-                3 * Math.floor(idRef.current / 27) +
-                1}
-            </span>
-          </div>
           <div>
-            <ul className="list-group">
-              {rowNum.map((item, index) =>
-                squareNumbers[Math.floor(idRef.current / 9)][
-                  idRef.current % 9
-                ] !==
-                  index + 1 &&
-                rowNum[Math.floor(idRef.current / 9)][index] &&
-                columnNum[idRef.current % 9][index] &&
-                macroNum[
-                  (Math.floor(idRef.current / 3) % 3) +
-                    3 * Math.floor(idRef.current / 27)
-                ][index] ? (
-                  <li className="list-group-item">
-                    {index + 1}: 1/{" "}
-                    {rowNum[index].reduce((prev, item, index2) => {
-                      return squareNumbers[Math.floor(idRef.current / 9)][
-                        index2
-                      ] === 0 &&
-                        rowNum[Math.floor(idRef.current / 9)][index] &&
-                        columnNum[index2][index] &&
-                        macroNum[
-                          (Math.floor(index2 / 3) % 3) +
-                            3 * Math.floor(idRef.current / 27)
-                        ][index]
-                        ? ++prev
-                        : prev;
-                    }, 0)}
-                  </li>
-                ) : (
-                  ""
-                )
-              )}
-            </ul>
-            <button
-              style={{ marginTop: "5px", marginBottom: "5px" }}
-              onClick={() => clearInputs(idRef.current)}
+            <div
+              style={{
+                height: "40px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
-              Wyczyść dane
-            </button>
+              <span
+                style={{
+                  fontSize: "30px",
+                  marginLeft: "20px",
+                  position: "relative",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  height: "fit-content",
+                }}
+              >
+                {id + 1}
+              </span>
+              <button
+                className="btn-close"
+                onClick={() => setId(-1)}
+                style={{
+                  position: "relative",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  justifyContent: "flex-end",
+                  marginRight: "10px",
+                }}
+              ></button>
+            </div>
+            <div id="parameters">
+              <span>Row: {Math.floor(idRef.current / 9) + 1}</span>
+              <span>Column: {(idRef.current % 9) + 1}</span>
+              <span>
+                MacroSquare:{" "}
+                {(Math.floor(idRef.current / 3) % 3) +
+                  3 * Math.floor(idRef.current / 27) +
+                  1}
+              </span>
+            </div>
+          </div>
+          <div id="probabilities">
+            {squareNumbers[Math.floor(idRef.current / 9)][idRef.current % 9] ===
+            0 ? (
+              <ul className="list-group">
+                {rowNum.map((item, index) =>
+                  squareNumbers[Math.floor(idRef.current / 9)][
+                    idRef.current % 9
+                  ] !==
+                    index + 1 &&
+                  rowNum[Math.floor(idRef.current / 9)][index] &&
+                  columnNum[idRef.current % 9][index] &&
+                  macroNum[
+                    (Math.floor(idRef.current / 3) % 3) +
+                      3 * Math.floor(idRef.current / 27)
+                  ][index] ? (
+                    <li className="list-group-item">
+                      {index + 1}: 1/
+                      {Math.min(
+                        [1, 2, 3, 4, 5, 6, 7, 8, 9].reduce(
+                          (prev, item, index3) => {
+                            return !rowNum[Math.floor(idRef.current / 9)][
+                              index3
+                            ] ||
+                              !columnNum[idRef.current % 9][index3] ||
+                              !macroNum[
+                                3 * Math.floor(idRef.current / 27) +
+                                  Math.floor((idRef.current % 9) / 3)
+                              ][index3]
+                              ? --prev
+                              : prev;
+                          },
+                          9
+                        ),
+                        rowNum[Math.floor(idRef.current / 9)].reduce(
+                          (prev, item2, index3) => {
+                            return squareNumbers[Math.floor(idRef.current / 9)][
+                              index3
+                            ] !== 0 ||
+                              !columnNum[index3][index] ||
+                              !macroNum[
+                                3 * Math.floor(idRef.current / 27) +
+                                  Math.floor(index3 / 3)
+                              ][index]
+                              ? --prev
+                              : prev;
+                          },
+                          9
+                        ),
+                        columnNum[idRef.current % 9].reduce(
+                          (prev, item2, index3) => {
+                            return squareNumbers[index3][idRef.current % 9] !==
+                              0 ||
+                              !rowNum[index3][index] ||
+                              !macroNum[
+                                3 * Math.floor(index3 / 3) +
+                                  Math.floor((idRef.current % 9) / 3)
+                              ][index]
+                              ? --prev
+                              : prev;
+                          },
+                          9
+                        ),
+                        macroNum[
+                          (Math.floor(idRef.current / 3) % 3) +
+                            3 * Math.floor(idRef.current / 27)
+                        ].reduce((prev, item2, index3) => {
+                          return squareNumbers[
+                            3 * Math.floor(idRef.current / 27) +
+                              Math.floor(index3 / 3)
+                          ][
+                            3 * Math.floor((idRef.current % 9) / 3) +
+                              (index3 % 3)
+                          ] !== 0 ||
+                            !rowNum[
+                              3 * Math.floor(idRef.current / 27) +
+                                Math.floor(index3 / 3)
+                            ][index] ||
+                            !columnNum[
+                              3 * Math.floor((idRef.current % 9) / 3) +
+                                (index3 % 3)
+                            ][index]
+                            ? --prev
+                            : prev;
+                        }, 9)
+                      )}
+                    </li>
+                  ) : (
+                    ""
+                  )
+                )}
+              </ul>
+            ) : (
+              <span
+                style={{ width: "100%", fontSize: "50px", display: "block" }}
+              >
+                {
+                  squareNumbers[Math.floor(idRef.current / 9)][
+                    idRef.current % 9
+                  ]
+                }
+              </span>
+            )}
           </div>
         </div>
       ) : null}

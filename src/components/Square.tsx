@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { CSSProperties } from "react";
-import "../App.css";
+import "../Probabilities.css";
 
 interface Props {
   id: number;
@@ -21,6 +21,7 @@ interface Props {
     columnNum: boolean[][];
     macroNum: boolean[][];
   };
+  probabilities: number[][];
 }
 
 const Square = ({
@@ -34,6 +35,7 @@ const Square = ({
   onChangeValues,
   values,
   tables,
+  probabilities,
 }: Props) => {
   const tribeRef = useRef(false);
   const [value, setValue] = useState(0);
@@ -41,7 +43,25 @@ const Square = ({
   const [rowNum, setRowNum] = useState(tables.rowNum);
   const [columnNum, setColumnNum] = useState(tables.columnNum);
   const [macroNum, setMacroNum] = useState(tables.macroNum);
+  const [warning, setWarning] = useState(false);
+  const [posibilities, setPosibilities] = useState<number[]>([]);
   //const { rowNumber, setRowNumber } = useState<boolean[][]>(rowNumbers);
+
+  const calculatePosibilities = () => {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 8].reduce(
+      (prev: number[], item: number) => {
+        if (
+          rowNum[row][item] &&
+          columnNum[column][item] &&
+          macroNum[macroSquare][item]
+        ) {
+          prev.push(item);
+        }
+        return prev;
+      },
+      []
+    );
+  };
 
   const write = (event: KeyboardEvent) => {
     console.log(`${row} ${column} ${macroSquare}`);
@@ -102,20 +122,23 @@ const Square = ({
         event.code === "Numpad7" ||
         event.code === "Numpad8" ||
         event.code === "Numpad9") &&
-      tribeRef.current
+      tribeRef.current &&
+      rowNum[row][parseInt(event.code[event.code.length - 1]) - 1] &&
+      columnNum[column][parseInt(event.code[event.code.length - 1]) - 1] &&
+      macroNum[macroSquare][parseInt(event.code[event.code.length - 1]) - 1]
     ) {
       console.log(`V0: ${valueRef.current}`);
       if (valueRef.current !== 0) {
         console.log(`V: ${valueRef.current}`);
-        editTables(valueRef.current - 1, true, null);
-        onChangeTables(rowNum, columnNum, macroNum);
+        editTables(
+          valueRef.current - 1,
+          true,
+          parseInt(event.code[event.code.length - 1])
+        );
       }
       valueRef.current = parseInt(event.code[event.code.length - 1]);
       setValue(parseInt(event.code[event.code.length - 1]));
       editTables(parseInt(event.code[event.code.length - 1]) - 1, false, null);
-      console.log(rowNum);
-      console.log(columnNum);
-      console.log(macroNum);
     } else if (event.code === "Backspace" && tribeRef.current) {
       console.log(`Value: ${valueRef.current}`);
       editTables(valueRef.current - 1, true, 0);
@@ -124,24 +147,83 @@ const Square = ({
       setValue(0);
     } else if (event.code === "Escape") {
       onHandleSquareId(-1);
+      tribeRef.current = false;
+    } else if (
+      (!rowNum[row][parseInt(event.code[event.code.length - 1]) - 1] ||
+        !columnNum[column][parseInt(event.code[event.code.length - 1]) - 1] ||
+        !macroNum[macroSquare][
+          parseInt(event.code[event.code.length - 1]) - 1
+        ]) &&
+      id === squareId
+    ) {
+      console.log(`Square ${squareId} | ${id}`);
+      console.log(
+        `${
+          !rowNum[row][parseInt(event.code[event.code.length - 1]) - 1] ||
+          !columnNum[column][parseInt(event.code[event.code.length - 1]) - 1] ||
+          !macroNum[macroSquare][
+            parseInt(event.code[event.code.length - 1]) - 1
+          ]
+        } ${id === squareId} Tabele: ${
+          rowNum[row][parseInt(event.code[event.code.length - 1]) - 1]
+        } ${
+          columnNum[column][parseInt(event.code[event.code.length - 1]) - 1]
+        } ${
+          macroNum[macroSquare][parseInt(event.code[event.code.length - 1]) - 1]
+        }`
+      );
+      const warn = setInterval(() => {
+        setWarning((warn) => !warn);
+      }, 200);
+      setTimeout(() => {
+        clearInterval(warn);
+      }, 800);
     }
   };
 
   useEffect(() => {
+    if (id != -1 && row === Math.floor(id / 9)) {
+      console.log(calculatePosibilities());
+    }
     if (id === squareId) {
       console.log(`id: ${id} squareId: ${squareId} Dodano wydarzenie`);
       window.addEventListener("keydown", write);
       tribeRef.current = true;
-    } else {
-      console.log(`id: ${id} squareId: ${squareId} Usunięto wydarzenie`);
+    }
+    return () => {
+      //console.log(`id: ${id} squareId: ${squareId} Usunięto wydarzenie`);
       window.removeEventListener("keydown", write);
       tribeRef.current = false;
-    }
+    };
   }, [id]);
 
   return (
     <div
-      className={"square"}
+      className={
+        warning
+          ? "square-warning"
+          : valueRef.current === 0
+          ? Math.min(...probabilities[squareId]) === 1
+            ? "probabilities1"
+            : Math.min(...probabilities[squareId]) === 2
+            ? "probabilities2"
+            : Math.min(...probabilities[squareId]) === 3
+            ? "probabilities3"
+            : Math.min(...probabilities[squareId]) === 4
+            ? "probabilities4"
+            : Math.min(...probabilities[squareId]) === 5
+            ? "probabilities5"
+            : Math.min(...probabilities[squareId]) === 6
+            ? "probabilities6"
+            : Math.min(...probabilities[squareId]) === 7
+            ? "probabilities7"
+            : Math.min(...probabilities[squareId]) === 8
+            ? "probabilities8"
+            : Math.min(...probabilities[squareId]) === 9
+            ? "probabilities9"
+            : "square"
+          : "square"
+      }
       onClick={() => {
         onHandleSquareId(squareId);
       }}
