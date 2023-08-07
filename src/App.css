@@ -1,15 +1,17 @@
 :root{
-  background-color: #777777;
+  background: #777777 ;
 }
 
 #root {
-  max-width: 1280px;
+  width: 100%;
   height: 100%;
   padding-top: 0px;
+  padding: 0px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: #777777;
+  background: #777777 ;
+  overflow: hidden;
 }
 
 .square{
@@ -101,13 +103,33 @@
   position: absolute;
   width: 100%;
   height: 100vh;
-  top: 50%;
-  transform: translateY(-25%);
 }
 
 #parameters span{
   display: block;
 }
+
+#probabilities ul li{
+  border-top: 1px solid #cccccc;
+}
+
+#probabilities ul li span:last-child{
+  background-color: white;
+}
+
+#probabilities li{
+  width: 75%;
+  height: 30px;
+  position: relative;
+  margin-bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 
 li input{
   width: 100px;
@@ -155,8 +177,4 @@ li input{
   100%{
       transform: translate(0px,0px) rotateZ(calc(var(--i)*90deg));
   }
-}
-
-.posibilities1{
-  
 }
